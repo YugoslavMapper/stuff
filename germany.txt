@@ -1,0 +1,667 @@
+focus_tree = {
+	id = germany_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = GER
+		}
+	}
+	default = no
+	focus = {
+		id = GER_side_hitler
+		icon = GFX_goal_support_fascism
+		cost = 0.00
+		mutually_exclusive = {
+			focus = GER_comm
+			focus = GER_oppose
+		}
+		x = 8
+		y = 0
+			completion_reward = { add_party_popularity  f  20 }
+
+	}
+	focus = {
+		id = GER_comm
+		icon = GFX_goal_support_communism
+		cost = 0.00
+		mutually_exclusive = {
+			focus = GER_side_hitler
+			focus = GER_oppose
+		}
+		x = 13
+		y = 1
+			completion_reward = { add_party_popularity  f  10 }
+
+	}
+	focus = {
+		id = GER_oppose
+		icon = GFX_goal_generic_small_arms
+		cost = 0.00
+		mutually_exclusive = {
+			focus = GER_comm
+			focus = GER_side_hitler
+		}
+		x = 18
+		y = 0
+
+	}
+	focus = {
+		id = GER_rhineland
+		icon = GFX_goal_generic_military_sphere
+		cost = 0.00
+		prerequisite = {
+			focus = GER_side_hitler
+		}
+		x = 2
+		y = 1
+			available = {
+					is_puppet = no
+					NOT = {
+							has_game_rule = {
+									rule = GER_can_remilitarize_rhineland
+									option = no
+								}
+						}
+				}
+			bypass = {
+					42 = {
+							is_demilitarized_zone = no
+						}
+					51 = {
+							is_demilitarized_zone = no
+						}
+				}
+			ai_will_do = {
+					factor = 10
+				}
+			completion_reward = {
+					42 = {
+							set_demilitarized_zone = no
+						}
+					51 = {
+							set_demilitarized_zone = no
+						}
+					custom_effect_tooltip = GER_rhineland_ultimatum
+					add_political_power = 120
+					army_experience = 5
+					add_named_threat = {
+							threat = 5
+							name = GER_rhineland
+						}
+					if = {
+							limit = {
+									FRA = {
+											is_puppet = no
+										}
+								}
+							FRA = {
+									country_event = {
+											id = germany.60
+										}
+									custom_effect_tooltip = may_provoke_hostility
+								}
+						}
+				}
+
+	}
+	focus = {
+		id = GER_anti_demo
+		icon = GFX_goal_generic_position_armies
+		cost = 0.00
+		prerequisite = {
+			focus = GER_side_hitler
+		}
+		x = 10
+		y = 1
+			completion_reward = {
+					add_opinion_modifier = {
+							target = SOV
+							modifier = medium_increase
+						}
+					add_opinion_modifier = {
+							target = ITA
+							modifier = medium_increase
+						}
+					add_opinion_modifier = {
+							target = JAP
+							modifier = medium_increase
+						}
+					add_opinion_modifier = {
+							target = ENG
+							modifier = medium_decrease
+						}
+					add_opinion_modifier = {
+							target = FRA
+							modifier = medium_decrease
+						}
+				}
+
+	}
+	focus = {
+		id = GER_ally_jap
+		icon = GFX_goal_molotov_ribbentrop_pact
+		cost = 0.00
+		prerequisite = {
+			focus = GER_anti_demo
+		}
+		x = 8
+		y = 3
+			completion_reward = {
+					JAP = {
+							add_opinion_modifier = {
+									target = GER
+									modifier = medium_increase
+								}
+						}
+				}
+
+	}
+	focus = {
+		id = GER_ally_ita
+		icon = GFX_goal_molotov_ribbentrop_pact
+		cost = 0.00
+		prerequisite = {
+			focus = GER_anti_demo
+		}
+		x = 10
+		y = 3
+			completion_reward = {
+					ITA = {
+							add_opinion_modifier = {
+									target = GER
+									modifier = medium_increase
+								}
+						}
+				}
+
+	}
+	focus = {
+		id = GER_war_fra
+		icon = GFX_goal_generic_attack_allies
+		cost = 0.00
+		prerequisite = {
+			focus = GER_ally_jap
+			focus = GER_ally_ita
+		}
+		x = 8
+		y = 4
+			available = {
+					is_puppet = no
+					NOT = {
+							is_in_faction_with = FRA
+						}
+				}
+			x = 1
+			y = 1
+			relative_position_id = GER_around_maginot
+			cost = 10
+			bypass = {
+					OR = {
+							NOT = {
+									country_exists = FRA
+								}
+							has_war_with = FRA
+						}
+				}
+			historical_ai = {
+					date > 1939.1.1
+					NOT = {
+							any_neighbor_country = {
+									has_war_with = ROOT
+								}
+						}
+				}
+			will_lead_to_war_with = FRA
+			ai_will_do = {
+					factor = 10
+					modifier = {
+							factor = 0.05
+							date < 1939.1.1
+						}
+				}
+			completion_reward = {
+					add_named_threat = {
+							threat = 5
+							name = GER_war_with_france_threat
+						}
+					create_wargoal = {
+							type = take_state_focus
+							target = FRA
+							generator = { 28 }
+						}
+				}
+
+	}
+	focus = {
+		id = GER_around_maginot
+		icon = GFX_goal_generic_major_war
+		cost = 0.00
+		prerequisite = {
+			focus = GER_war_fra
+		}
+		x = 6
+		y = 5
+			available = {
+					OR = {
+							NOT = {
+									HOL = {
+											is_in_faction_with = GER
+										}
+								}
+							NOT = {
+									BEL = {
+											is_in_faction_with = GER
+										}
+								}
+							NOT = {
+									LUX = {
+											is_in_faction_with = GER
+										}
+								}
+						}
+				}
+			bypass = {
+					HOL = {
+							OR = {
+									exists = no
+									is_in_faction_with = GER
+									has_war_with = ROOT
+								}
+						}
+					BEL = {
+							OR = {
+									exists = no
+									is_in_faction_with = GER
+									has_war_with = ROOT
+								}
+						}
+					LUX = {
+							OR = {
+									exists = no
+									is_in_faction_with = GER
+									has_war_with = ROOT
+								}
+						}
+				}
+			historical_ai = {
+					date > 1939.1.1
+					NOT = {
+							any_home_area_neighbor_country = {
+									NOT = {
+											tag = FRA
+										}
+									has_war_with = ROOT
+									surrender_progress < 0.5
+								}
+						}
+				}
+			will_lead_to_war_with = BEL
+			will_lead_to_war_with = HOL
+			will_lead_to_war_with = LUX
+			x = -1
+			y = 2
+			cost = 4
+			ai_will_do = {
+					factor = 10
+					modifier = {
+							factor = 0.05
+							date < 1939.1.1
+						}
+					modifier = {
+							factor = 0.2
+							any_home_area_neighbor_country = {
+									NOT = {
+											tag = FRA
+										}
+									has_war_with = ROOT
+									surrender_progress < 0.5
+								}
+						}
+				}
+			completion_reward = {
+					if = {
+							limit = {
+									country_exists = BEL
+									NOT = {
+											BEL = {
+													is_in_faction_with = GER
+												}
+										}
+									NOT = {
+											has_war_with = BEL
+										}
+								}
+							create_wargoal = {
+									type = take_state_focus
+									target = BEL
+									generator = { 6 }
+								}
+						}
+					if = {
+							limit = {
+									country_exists = HOL
+									NOT = {
+											HOL = {
+													is_in_faction_with = GER
+												}
+										}
+									NOT = {
+											has_war_with = HOL
+										}
+									NOT = {
+											HOL = {
+													has_completed_focus = HOL_cave_to_the_germans
+												}
+										}
+								}
+							create_wargoal = {
+									type = take_state_focus
+									target = HOL
+									generator = { 7 }
+								}
+						}
+					if = {
+							limit = {
+									country_exists = HOL
+									NOT = {
+											HOL = {
+													is_in_faction_with = GER
+												}
+										}
+									NOT = {
+											has_war_with = HOL
+										}
+									HOL = {
+											has_completed_focus = HOL_cave_to_the_germans
+										}
+									NOT = {
+											HOL = {
+													has_completed_focus = HOL_the_netherlands_first
+												}
+										}
+								}
+							HOL = {
+									country_event = {
+											id = mtg_germany.1
+											hours = 6
+										}
+								}
+						}
+					if = {
+							limit = {
+									country_exists = LUX
+									NOT = {
+											LUX = {
+													is_in_faction_with = GER
+												}
+										}
+									NOT = {
+											has_war_with = LUX
+										}
+								}
+							create_wargoal = {
+									type = take_state_focus
+									target = LUX
+									generator = { 8 }
+								}
+						}
+					hidden_effect = {
+							news_event = {
+									hours = 6
+									id = news.234
+								}
+						}
+				}
+
+	}
+	focus = {
+		id = GER_around_alps
+		icon = GFX_goal_generic_small_arms
+		cost = 0.00
+		prerequisite = {
+			focus = GER_war_fra
+		}
+		x = 8
+		y = 5
+			will_lead_to_war_with = SWI
+			completion_reward = {
+					create_wargoal = {
+							type = take_state_focus
+							target = LUX
+							generator = { 8 }
+						}
+				}
+
+	}
+	focus = {
+		id = GER_war_SOV
+		icon = GFX_goal_anti_comintern_pact
+		cost = 0.00
+		prerequisite = {
+			focus = GER_ally_jap
+			focus = GER_ally_ita
+		}
+		x = 10
+		y = 4
+			will_lead_to_war_with = SOV
+			cancel = {
+					NOT = {
+							country_exists = SOV
+						}
+				}
+			x = 1
+			y = 4
+			relative_position_id = GER_anti_comitern_pact
+			cost = 10
+			historical_ai = {
+					NOT = {
+							any_home_area_neighbor_country = {
+									has_war_with = ROOT
+								}
+						}
+				}
+			bypass = {
+					has_war_with = SOV
+				}
+			ai_will_do = {
+					factor = 10
+					modifier = {
+							factor = 0
+							OR = {
+									has_army_manpower = {
+											size < 1199999
+										}
+									any_home_area_neighbor_country = {
+											has_war_with = ROOT
+										}
+								}
+						}
+					modifier = {
+							factor = 0NOT={
+							any_home_area_neighbor_country = {
+									tag = SOV
+								}
+						}
+					modifier = {
+							factor = 0
+							is_historical_focus_on = yes
+							date < 1939.1.1
+						}
+				}
+			completion_reward = {
+					create_wargoal = {
+							type = annex_everything
+							target = SOV
+						}
+				}
+
+	}
+	focus = {
+		id = GER_soviet_pact
+		icon = GFX_goal_generic_improve_relations
+		cost = 0.00
+		prerequisite = {
+			focus = GER_anti_demo
+			focus = GER_comm
+		}
+		x = 12
+		y = 2
+			available = {
+					is_puppet = no
+					has_government = fascism
+					has_army_manpower = {
+							size > 849999
+						}
+					SOV = {
+							NOT = {
+									has_war_with = GER
+								}
+							country_exists = SOV
+						}
+					NOT = {
+							has_completed_focus = GER_bulwark_against_bolshevism
+						}
+					NOT = {
+							has_completed_focus = GER_the_great_red_menace
+						}
+				}
+			cancel = {
+					OR = {
+							has_war_with = SOV
+							NOT = {
+									country_exists = SOV
+								}
+						}
+				}
+			cancel_if_invalid = no
+			x = 1
+			y = 3
+			relative_position_id = GER_soviet_treaty
+			cost = 10
+			ai_will_do = {
+					factor = 10
+					modifier = {
+							factor = 0
+						}
+				}
+			completion_reward = {
+					SOV = {
+							country_event = {
+									id = germany.11
+									days = 1
+								}
+							custom_effect_tooltip = GER_mol_rib_pact_tt
+							custom_effect_tooltip = needs_approval
+						}
+				}
+
+	}
+	focus = {
+		id = GER_partition_poland
+		icon = GFX_goal_generic_military_deal
+		cost = 0.00
+		prerequisite = {
+			focus = GER_soviet_pact
+		}
+		x = 12
+		y = 3
+			available = {
+					is_puppet = no
+					has_government = fascism
+					has_army_manpower = {
+							size > 849999
+						}
+					POL = {
+							NOT = {
+									country_exists = POL
+								}
+						}
+					completion_reward = { setowner  SOV  97  setowner  SOV  784  setowner  SOV  96  setowner  SOV  95  setowner  SOV  94  setowner  SOV  93  setowner  SOV  91  setowner  SOV  89  setowner  GER  10  setowner  GER  92  setowner  GER  88  setowner  GER  90  setowner  GER  762 }
+				}
+
+	}
+	focus = {
+		id = GER_ally_sov
+		icon = GFX_goal_generic_dangerous_deal
+		cost = 0.00
+		prerequisite = {
+			focus = GER_partition_poland
+		}
+		prerequisite = {
+			focus = GER_comm
+		}
+		x = 13
+		y = 4
+			available = {
+					is_puppet = no
+					has_government = fascism
+					has_war = no
+					SOV = {
+							has_war = no
+							NOT = {
+									has_war_with = GER
+								}
+							is_puppet = no
+						}
+				}
+			bypass = {
+					SOV = {
+							is_in_faction_with = GER
+						}
+				}
+			x = 1
+			y = 1
+			relative_position_id = GER_mol_rib_pact
+			cost = 10
+			ai_will_do = {
+					factor = 0.01
+					modifier = {
+							factor = 0
+							NOT = {
+									is_in_faction_with = POL
+								}
+							country_exists = POL
+						}
+					modifier = {
+							factor = 0
+							OR = {
+									has_war_with = POL
+									has_war_with = FRA
+								}
+						}
+				}
+			completion_reward = {
+					if = {
+							limit = {
+									is_faction_leader = yes
+								}
+							custom_effect_tooltip = ger_sov_buddies_tooltip_2
+						}
+					custom_effect_tooltip = ger_sov_buddies_tooltip
+					add_ideas = soviet_german_friendship
+					SOV = {
+							add_opinion_modifier = {
+									target = GER
+									modifier = ger_sov_alliance_focus
+								}
+							add_ideas = soviet_german_friendship
+							country_event = germany.89
+						}
+				}
+
+	}
+	focus = {
+		id = GER_annex_FRA
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 0.00
+		prerequisite = {
+			focus = GER_around_alps
+			focus = GER_around_maginot
+		}
+		x = 8
+		y = 6
+			completion_reward = { annex  FRA }
+
+	}
+}
